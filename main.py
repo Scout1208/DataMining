@@ -10,6 +10,7 @@ from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.neural_network import MLPClassifier
 
 # 定義分類器清單，使用類別而非實例
 classifiers = {
@@ -18,9 +19,10 @@ classifiers = {
     # "NaiveBayes": GaussianNB,
     # "DecisionTree": DecisionTreeClassifier,
     # "KNeighbors": KNeighborsClassifier,
-    # "RandomForest": RandomForestClassifier,
+    "RandomForest": RandomForestClassifier,
     "GradientBoostingClassifier":GradientBoostingClassifier,
-    "AdaBoostClassifier": AdaBoostClassifier
+    "AdaBoostClassifier": AdaBoostClassifier,
+    # "MLPClassifier": MLPClassifier
 }
 
 # 定義不同的目標變數清單
@@ -63,7 +65,7 @@ target_lists = {
 }
 
 # 建立輸出目錄
-output_dir = "predictions_drop"
+output_dir = "predictions"
 os.makedirs(output_dir, exist_ok=True)
 
 # 設定起始 ID
@@ -75,7 +77,7 @@ for target_list_name, targets in target_lists.items():
     
     # 建立訓練和測試資料集
     # train = MentalHealthyDataset_test(targets=targets, data_type="train")
-    train = MentalHealthyDataset(targets=targets, data_type="train")
+    train = MentalHealthyDataset_test(targets=targets, data_type="train")
     test = MentalHealthyDataset_test(targets=targets, data_type="test")
     print(f"  訓練集大小: {len(train)}, 測試集大小: {len(test)}")
     X_train, y_train = train.feature, train.label
