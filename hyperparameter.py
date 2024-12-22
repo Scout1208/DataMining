@@ -4,7 +4,7 @@ from datasets.mental_healthy import MentalHealthyDataset, MentalHealthyDataset_t
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import RandomizedSearchCV, GridSearchCV
-
+from sklearn.neural_network import MLPClassifier
 # 定義不同的目標變數清單
 target_lists = {
     "targets_export": [
@@ -83,7 +83,7 @@ models_and_params = {
         "random_params": {
             "n_estimators": [50, 100, 200, 300],
             "learning_rate": [0.01, 0.05, 0.1, 0.5, 1.0],
-            "base_estimator": [
+            "estimator": [
                 DecisionTreeClassifier(max_depth=1),
                 DecisionTreeClassifier(max_depth=3),
                 DecisionTreeClassifier(max_depth=5)
@@ -92,11 +92,31 @@ models_and_params = {
         "grid_params": {
             "n_estimators": [100, 200],
             "learning_rate": [0.1, 0.5, 1.0],
-            "base_estimator": [
+            "estimator": [
                 DecisionTreeClassifier(max_depth=1),
                 DecisionTreeClassifier(max_depth=3)
             ]
         }
+    },
+    "MLPClassifier":{
+        "model": MLPClassifier(random_state=42),
+        "random_params":{
+            "hidden_layer_sizes": [(50,), (100,), (50, 50), (100, 100)],
+            "activation": ["relu", "tanh", "logistic"],
+            "solver": ["adam", "sgd"],
+            "alpha": [0.0001, 0.001, 0.01],
+            "learning_rate": ["constant", "adaptive"],
+            "learning_rate_init": [0.001, 0.01, 0.1],
+            "max_iter": [200, 400, 800]
+        },
+        "grid_params": {
+            "hidden_layer_sizes": [(50,), (100,), (100, 50)],
+            "activation": ["relu"],
+            "solver": ["adam"],
+            "alpha": [0.0001, 0.001],
+            "learning_rate": ["adaptive"]
+        }
+
     }
 }
 # 遍歷每個目標變數清單
