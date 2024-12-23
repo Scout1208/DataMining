@@ -23,7 +23,7 @@ cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
 estimator = RandomForestClassifier(random_state=42, n_jobs=-1)
 
 # Initialize RFECV with optimized parameters
-selector = RFECV(estimator=estimator, step=1, cv=cv, scoring='f1', n_jobs=-1)
+selector = RFECV(estimator=estimator, step=2, cv=cv, scoring='accuracy', n_jobs=-1)
 
 # Fit RFECV
 selector.fit(X, y)
