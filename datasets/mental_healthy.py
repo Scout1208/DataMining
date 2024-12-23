@@ -2,6 +2,7 @@ from torch.utils.data import Dataset
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import numpy as np
+from sklearn.preprocessing import KBinsDiscretizer
 class MentalHealthyDataset(Dataset):
     dataset = None
     def __init__(self, targets, data_type):
@@ -332,14 +333,14 @@ class MentalHealthyDataset_test(Dataset):
         # 例如，用中位數或平均值來填補數值欄位
         # 這邊示範用中位數來填補 Pressure, Satisfaction
         if df["Pressure"].isna().sum() > 0:
-            mean_pressure = df["Pressure"].mean()
+            mean_pressure = df["Pressure"].median()
             df["Pressure"] = df["Pressure"].fillna(mean_pressure)
 
         if df["Satisfaction"].isna().sum() > 0:
             median_satisfaction = df["Satisfaction"].median()
             df["Satisfaction"] = df["Satisfaction"].fillna(median_satisfaction)
         if df["Financial Stress"].isna().sum() > 0:
-            mean_stress = df["Financial Stress"].mean()
+            mean_stress = df["Financial Stress"].median()
             df["Financial Stress"] = df["Financial Stress"].fillna(mean_stress)
         # --- 4) 類別型欄位缺失值填補 ---
         # 例如 Dietary Habits, Gender, ... 都可以加一個未知類別
@@ -420,6 +421,9 @@ class MentalHealthyDataset_test(Dataset):
         rare_jobs = job_count[job_count < 10].index
         df.loc[df["Profession"].isin(rare_jobs), "Profession"] = "OTHER"
 
+        degree_count = df["Degree"].value_counts()
+        rare_degrees = degree_count[degree_count < 10].index
+        df.loc[df["Degree"].isin(rare_degrees), "Degree"] = "OTHER"
         # --- 7) Label Encoding（包含把 "OTHER" 也一起編碼） ---
         le_city = LabelEncoder()
         df["City"] = le_city.fit_transform(df["City"])
@@ -447,22 +451,42 @@ class MentalHealthyDataset_test(Dataset):
         #    例如把 18 以下都當 0 區段，>60 歸 2 區段。
         #    這裡假設原本只想區分: [18, 45), [45, 60), [60, ∞)
         df["Age"] = df["Age"].apply(lambda x: float(x) if pd.notnull(x) else np.nan)
-        
-        def bin_age(age):
-            if pd.isna(age):
-                return -1  # 不知道
-            elif age < 18:
-                return -1  # 未成年，不在資料範圍，當 Unknown
-            elif age < 45:
-                return 0
-            elif age < 60:
-                return 1
-            else:
-                return 2  # 大於等於 60
-
-        df["Age"] = df["Age"].apply(bin_age)
+        #1
+        # def bin_age(age):
+        #     if pd.isna(age):
+        #         return -1  # 不知道
+        #     elif age < 18:
+        #         return -1  # 未成年，不在資料範圍，當 Unknown
+        #     elif age < 45:
+        #         return 0
+        #     elif age < 60:
+        #         return 1
+        #     else:
+        #         return 2  # 大於等於 60
+        #2
+        # def bin_age(age):
+        #     if pd.isna(age):
+        #         return -1  # 不知道
+        #     elif age < 18:
+        #         return -1  # 未成年，不在資料範圍，當 Unknown
+        #     elif age < 30:
+        #         return 0
+        #     elif age < 40:
+        #         return 1
+        #     elif age < 50:
+        #         return 2
+        #     elif age < 60:
+        #         return 3
+        #     else:
+        #         return 4  # 大於等於 60
+        # df["Age"] = df["Age"].apply(bin_age)
+        #等距
+        kbins_width = KBinsDiscretizer(n_bins=4, encode='ordinal', strategy='uniform')
+        df['Age'] = kbins_width.fit_transform(df[['Age']])
         df.to_csv(f"output_{data_type}.csv", index=False)
-
+        # 等量
+        # kbins_freq = KBinsDiscretizer(n_bins=4, encode='ordinal', strategy='quantile')
+        # df['Age'] = kbins_freq.fit_transform(df[['Age']])
         # 將結果存到 class 變數
         MentalHealthyDataset_test.dataset = df
         return df.copy()  # 回傳一份拷貝
