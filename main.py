@@ -63,100 +63,29 @@ target_lists = {
         "Satisfaction"
     ]
 }
+
 targets_and_classifiers = {
     "targets_export": {
-        "RandomForest": (RandomForestClassifier, {
-            "n_estimators": 200,
-            "max_depth": 10,
-            "max_features": "log2",
-            "min_samples_split": 2,
-            "min_samples_leaf": 1,
-        }),
-        "GradientBoosting": (GradientBoostingClassifier, {
-            "n_estimators": 200,
-            "learning_rate": 0.1,
-            "max_depth": 5,
-            "min_samples_split": 5,
-            "subsample": 0.8,
-        }),
-        "AdaBoost": (AdaBoostClassifier, {
-            "n_estimators": 200,
-            "learning_rate": 0.5,
-            "estimator": DecisionTreeClassifier(max_depth=3),
-        }),
-        "MLPClassifier": (MLPClassifier, {
-            "solver": "adam",
-            "max_iter": 800,
-            "learning_rate_init": 0.01,
-            "learning_rate": "adaptive",
-            "hidden_layer_sizes": (100, 50),
-            "alpha": 0.001,
-            "activation": "relu",
-        }),
+        # "RandomForest": (RandomForestClassifier, {'max_depth': 10, 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}),
+        # "GradientBoosting": (GradientBoostingClassifier, {'learning_rate': 0.25, 'max_depth': 2, 'min_samples_split': 2, 'n_estimators': 350, 'subsample': 0.8}),
+        # "AdaBoost": (AdaBoostClassifier, {'estimator': DecisionTreeClassifier(max_depth=5), 'learning_rate': 0.1, 'n_estimators': 250}),
+        "MLPClassifier": (MLPClassifier, {'activation': 'logistic', 'alpha': 0.0001, 'hidden_layer_sizes': (100, 100), 'learning_rate_init': 0.005, 'max_iter': 600, 'solver': 'adam'})
     },
     "targets_chi2": {
-        "RandomForest": (RandomForestClassifier, {
-            "n_estimators": 200,
-            "max_depth": 10,
-            "max_features": "log2",
-            "min_samples_split": 5,
-            "min_samples_leaf": 1,
-        }),
-        "GradientBoosting": (GradientBoostingClassifier, {
-            "n_estimators": 200,
-            "learning_rate": 0.1,
-            "max_depth": 3,
-            "min_samples_split": 5,
-            "subsample": 0.8,
-        }),
-        "AdaBoost": (AdaBoostClassifier, {
-            "n_estimators": 200,
-            "learning_rate": 0.5,
-            "estimator": DecisionTreeClassifier(max_depth=3),
-        }),
-        "MLPClassifier": (MLPClassifier, {
-            "solver": "adam",
-            "max_iter": 800,
-            "learning_rate_init": 0.01,
-            "learning_rate": "adaptive",
-            "hidden_layer_sizes": (100, 50),
-            "alpha": 0.001,
-            "activation": "relu",
-        }),
+        # "RandomForest": (RandomForestClassifier, {'max_depth': 10, 'max_features': 'log2', 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 100}),
+        # "GradientBoosting": (GradientBoostingClassifier, {'learning_rate': 0.25, 'max_depth': 2, 'min_samples_split': 2, 'n_estimators': 350, 'subsample': 0.75}),
+        # "AdaBoost": (AdaBoostClassifier, {'estimator': DecisionTreeClassifier(max_depth=5), 'learning_rate': 0.1, 'n_estimators': 200}),
+        "MLPClassifier": (MLPClassifier, {'activation': 'logistic', 'alpha': 0.0001, 'hidden_layer_sizes': (100, 100), 'learning_rate_init': 0.005, 'max_iter': 600, 'solver': 'adam'})
     },
     "targets_myself": {
-        "RandomForest": (RandomForestClassifier, {
-            "n_estimators": 200,
-            "max_depth": None,
-            "max_features": "sqrt",
-            "min_samples_split": 5,
-            "min_samples_leaf": 2,
-        }),
-        "GradientBoosting": (GradientBoostingClassifier, {
-            "n_estimators": 200,
-            "learning_rate": 0.1,
-            "max_depth": 5,
-            "min_samples_split": 2,
-            "subsample": 0.8,
-        }),
-        "AdaBoost": (AdaBoostClassifier, {
-            "n_estimators": 200,
-            "learning_rate": 0.1,
-            "estimator": DecisionTreeClassifier(max_depth=5),
-        }),
-        "MLPClassifier": (MLPClassifier, {
-            "solver": "adam",
-            "max_iter": 800,
-            "learning_rate_init": 0.01,
-            "learning_rate": "adaptive",
-            "hidden_layer_sizes": (100, 50),
-            "alpha": 0.001,
-            "activation": "relu",
-        }),
+        # "RandomForest": (RandomForestClassifier, {'max_depth': 20, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 200}),
+        # "GradientBoosting": (GradientBoostingClassifier, {'learning_rate': 0.25, 'max_depth': 3, 'min_samples_split': 2, 'n_estimators': 250, 'subsample': 0.75}),
+        # "AdaBoost": (AdaBoostClassifier, {'estimator': DecisionTreeClassifier(max_depth=4), 'learning_rate': 0.15, 'n_estimators': 250}),
+        "MLPClassifier": (MLPClassifier,{'activation': 'relu', 'alpha': 0.001, 'hidden_layer_sizes': (100, 100), 'learning_rate_init': 0.005, 'max_iter': 600, 'solver': 'adam'})
     }
 }
 # 建立輸出目錄
-output_dir = "predictions_best"
+output_dir = "predictions_best_ture"
 os.makedirs(output_dir, exist_ok=True)
 
 # 設定起始 ID
