@@ -71,11 +71,11 @@ models_and_params = {
             "subsample": [0.6, 0.8, 1.0]
         },
         "grid_params": {
-            "n_estimators": [100, 200],
-            "learning_rate": [0.05, 0.1],
-            "max_depth": [3, 5],
-            "min_samples_split": [2, 5],
-            "subsample": [0.8, 1.0]
+            'n_estimators': [250, 300, 350],
+            'learning_rate': [0.15, 0.2, 0.25],
+            'max_depth': [2, 3, 4],
+            'min_samples_split': [2, 3],
+            'subsample': [0.75, 0.8, 0.85]
         }
     },
     "AdaBoostClassifier": {
@@ -90,12 +90,9 @@ models_and_params = {
             ]
         },
         "grid_params": {
-            "n_estimators": [100, 200],
-            "learning_rate": [0.1, 0.5, 1.0],
-            "estimator": [
-                DecisionTreeClassifier(max_depth=1),
-                DecisionTreeClassifier(max_depth=3)
-            ]
+            'n_estimators': [150, 200, 250],
+            'learning_rate': [0.05, 0.1, 0.15],
+            'estimator': [DecisionTreeClassifier(max_depth=4), DecisionTreeClassifier(max_depth=5)]
         }
     },
     "MLPClassifier":{
@@ -110,11 +107,11 @@ models_and_params = {
             "max_iter": [200, 400, 800]
         },
         "grid_params": {
-            "hidden_layer_sizes": [(50,), (100,), (100, 50)],
-            "activation": ["relu"],
-            "solver": ["adam"],
-            "alpha": [0.0001, 0.001],
-            "learning_rate": ["adaptive"]
+            'hidden_layer_sizes': [(50, 50), (100, 50), (100, 100)],
+            'learning_rate_init': [0.005, 0.01, 0.02],
+            'activation': ['logistic', 'relu'],
+            'alpha': [0.0001, 0.001],
+            'solver': ['adam']
         }
 
     }
@@ -136,31 +133,31 @@ for target_list_name, targets in target_lists.items():
         print(f"Running hyperparameter search for {model_name}...")
         
         model = config["model"]
-        random_params = config["random_params"]
+        # random_params = config["random_params"]
         grid_params = config["grid_params"]
 
         # RandomizedSearchCV
-        random_search = RandomizedSearchCV(
-            estimator=model,
-            param_distributions=random_params,
-            n_iter=20,  # 随机搜索迭代次数
-            scoring="accuracy",
-            cv=5,  # 交叉验证折数
-            verbose=1,
-            random_state=42,
-            n_jobs=-1
-        )
-        random_search.fit(X_train, y_train)
-        print(f"{model_name} RandomizedSearchCV Best Params: {random_search.best_params_}")
-        print(f"{model_name} RandomizedSearchCV Best Score: {random_search.best_score_}")
-        results.append({
-            "model": model_name,
-            "method": "RandomizedSearchCV",
-            "best_params": random_search.best_params_,
-            "best_score": random_search.best_score_
-        })
+        # random_search = RandomizedSearchCV(
+        #     estimator=model,
+        #     param_distributions=random_params,
+        #     n_iter=20,  # 随机搜索迭代次数
+        #     scoring="accuracy",
+        #     cv=5,  # 交叉验证折数
+        #     verbose=1,
+        #     random_state=42,
+        #     n_jobs=-1
+        # )
+        # random_search.fit(X_train, y_train)
+        # print(f"{model_name} RandomizedSearchCV Best Params: {random_search.best_params_}")
+        # print(f"{model_name} RandomizedSearchCV Best Score: {random_search.best_score_}")
+        # results.append({
+        #     "model": model_name,
+        #     "method": "RandomizedSearchCV",
+        #     "best_params": random_search.best_params_,
+        #     "best_score": random_search.best_score_
+        # })
 
-        # GridSearchCV
+        GridSearchCV
         grid_search = GridSearchCV(
             estimator=model,
             param_grid=grid_params,
