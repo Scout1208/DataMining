@@ -2,7 +2,6 @@ import os
 import pandas as pd
 from datasets.mental_healthy import MentalHealthyDataset, MentalHealthyDataset_test
 from classifiers.sklearn_adapter import SklearnClassifierAdapter
-from sklearn.metrics import precision_score, recall_score, f1_score
 # 引入需要的分類器
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
@@ -65,18 +64,18 @@ target_lists = {
 }
 
 targets_and_classifiers = {
-    "targets_export": {
-        "RandomForest": (RandomForestClassifier, {'max_depth': 10, 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}),
-        "GradientBoosting": (GradientBoostingClassifier, {'learning_rate': 0.25, 'max_depth': 2, 'min_samples_split': 2, 'n_estimators': 350, 'subsample': 0.8}),
-        "AdaBoost": (AdaBoostClassifier, {'estimator': DecisionTreeClassifier(max_depth=5), 'learning_rate': 0.1, 'n_estimators': 250}),
-        # "MLPClassifier": (MLPClassifier, {'activation': 'logistic', 'alpha': 0.0001, 'hidden_layer_sizes': (100, 100), 'learning_rate_init': 0.005, 'max_iter': 600, 'solver': 'adam'})
-    },
-    "targets_chi2": {
-        "RandomForest": (RandomForestClassifier, {'max_depth': 10, 'max_features': 'log2', 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 100}),
-        "GradientBoosting": (GradientBoostingClassifier, {'learning_rate': 0.25, 'max_depth': 2, 'min_samples_split': 2, 'n_estimators': 350, 'subsample': 0.75}),
-        "AdaBoost": (AdaBoostClassifier, {'estimator': DecisionTreeClassifier(max_depth=5), 'learning_rate': 0.1, 'n_estimators': 200}),
-        # "MLPClassifier": (MLPClassifier, {'activation': 'logistic', 'alpha': 0.0001, 'hidden_layer_sizes': (100, 100), 'learning_rate_init': 0.005, 'max_iter': 600, 'solver': 'adam'})
-    },
+    # "targets_export": {
+    #     "RandomForest": (RandomForestClassifier, {'max_depth': 10, 'max_features': 'log2', 'min_samples_leaf': 1, 'min_samples_split': 2, 'n_estimators': 200}),
+    #     "GradientBoosting": (GradientBoostingClassifier, {'learning_rate': 0.25, 'max_depth': 2, 'min_samples_split': 2, 'n_estimators': 350, 'subsample': 0.8}),
+    #     "AdaBoost": (AdaBoostClassifier, {'estimator': DecisionTreeClassifier(max_depth=5), 'learning_rate': 0.1, 'n_estimators': 250}),
+    #     # "MLPClassifier": (MLPClassifier, {'activation': 'logistic', 'alpha': 0.0001, 'hidden_layer_sizes': (100, 100), 'learning_rate_init': 0.005, 'max_iter': 600, 'solver': 'adam'})
+    # },
+    # "targets_chi2": {
+    #     "RandomForest": (RandomForestClassifier, {'max_depth': 10, 'max_features': 'log2', 'min_samples_leaf': 2, 'min_samples_split': 2, 'n_estimators': 100}),
+    #     "GradientBoosting": (GradientBoostingClassifier, {'learning_rate': 0.25, 'max_depth': 2, 'min_samples_split': 2, 'n_estimators': 350, 'subsample': 0.75}),
+    #     "AdaBoost": (AdaBoostClassifier, {'estimator': DecisionTreeClassifier(max_depth=5), 'learning_rate': 0.1, 'n_estimators': 200}),
+    #     # "MLPClassifier": (MLPClassifier, {'activation': 'logistic', 'alpha': 0.0001, 'hidden_layer_sizes': (100, 100), 'learning_rate_init': 0.005, 'max_iter': 600, 'solver': 'adam'})
+    # },
     "targets_myself": {
         "RandomForest": (RandomForestClassifier, {'max_depth': 20, 'max_features': 'sqrt', 'min_samples_leaf': 2, 'min_samples_split': 5, 'n_estimators': 200}),
         "GradientBoosting": (GradientBoostingClassifier, {'learning_rate': 0.25, 'max_depth': 3, 'min_samples_split': 2, 'n_estimators': 250, 'subsample': 0.75}),
@@ -118,11 +117,8 @@ for target_name, classifiers in targets_and_classifiers.items():
             predictions = adapter.predict(X_test)
             
             # 評估模型性能（例如準確率）
-            accuracy = adapter.score(X_train, y_train)
-            precision = precision_score(X_train, y_train)
-            recall = recall_score(X_train, y_train)
-            f1 = f1_score(X_train, y_train)
-            print(f"    {clf_name} 在 {target_name} 上的訓練準確率: {accuracy:.4f}\nprecision:{precision:.4f}\nrecall:{recall:.4f}\nf1:{f1:.4f}")
+            accuracy = adapter.score(y_train, y_pred)
+            print(f"    {clf_name} 在 {target_name} 上的訓練準確率: {accuracy:.4f}")
             
             # 將預測結果轉換為 DataFrame
             df = pd.DataFrame(predictions, columns=["Depression"])
