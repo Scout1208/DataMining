@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from datasets.mental_healthy import MentalHealthyDataset, MentalHealthyDataset_test
 from classifiers.sklearn_adapter import SklearnClassifierAdapter
+from sklearn.metrics import precision_score, recall_score, f1_score
 # 引入需要的分類器
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, AdaBoostClassifier
@@ -117,8 +118,12 @@ for target_name, classifiers in targets_and_classifiers.items():
             predictions = adapter.predict(X_test)
             
             # 評估模型性能（例如準確率）
-            accuracy = adapter.score(y_train, y_pred)
-            print(f"    {clf_name} 在 {target_name} 上的訓練準確率: {accuracy:.4f}")
+            y_pred = adapter.predict(X_train)
+            accuracy = adapter.score(X_train, y_train)
+            precision = precision_score(y_train, y_pred)
+            recall = recall_score(y_train, y_pred)
+            f1 = f1_score(y_train, y_pred)
+            print(f"    {clf_name} 在 {target_name} 上的訓練準確率: {accuracy:.4f}\nprecision:{precision:.4f}\nrecall:{recall:.4f}\nf1:{f1:.4f}")
             
             # 將預測結果轉換為 DataFrame
             df = pd.DataFrame(predictions, columns=["Depression"])
